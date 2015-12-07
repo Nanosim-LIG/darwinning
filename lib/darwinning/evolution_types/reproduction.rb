@@ -1,6 +1,7 @@
 module Darwinning
   module EvolutionTypes
     class Reproduction
+      include ReExpress
 
       # Available crossover_methods:
       #   :alternating_swap
@@ -29,18 +30,6 @@ module Darwinning
         organism2 = new_member_from_genotypes(organism_klass, new_genotypes.last)
 
         [organism1, organism2]
-      end
-
-      def new_member_from_genotypes(organism_klass, genotypes)
-        new_member = organism_klass.new
-        if organism_klass.superclass.to_s == "Darwinning::Organism"
-          new_member.genotypes = genotypes
-        else
-          new_member.genes.each do |gene|
-            new_member.send("#{gene.name}=", genotypes[gene])
-          end
-        end
-        new_member
       end
 
       def alternating_swap(m1, m2)
