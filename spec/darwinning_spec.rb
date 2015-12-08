@@ -1,4 +1,4 @@
-require 'spec_helper'
+require_relative 'spec_helper'
 
 describe Darwinning do
   let(:triple_pop) { NewTriple.build_population(0, 20, 1000) }

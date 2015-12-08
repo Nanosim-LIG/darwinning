@@ -1,4 +1,4 @@
-require 'spec_helper'
+require_relative 'spec_helper'
 
 describe Darwinning::Gene do
   let(:digit) { Darwinning::Gene.new(name: "digit", value_range: (0..9)) }

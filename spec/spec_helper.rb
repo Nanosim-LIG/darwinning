@@ -1,4 +1,4 @@
 require 'darwinning'
-require './spec/classes/triple'
-require './spec/classes/new_triple'
-require './spec/classes/chimps'
+require_relative 'classes/triple'
+require_relative 'classes/new_triple'
+require_relative 'classes/chimps'
