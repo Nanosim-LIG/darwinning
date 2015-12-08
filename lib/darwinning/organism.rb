@@ -46,7 +46,7 @@ module Darwinning
         @genotypes = genotypes
       end
 
-      @fitness = -1
+      @fitness = nil
     end
     
     def name
