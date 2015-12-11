@@ -2,20 +2,20 @@ require 'darwinning'
 require 'pp'
 
 class Cookie < Darwinning::Organism
-	@name = "Chocolate Chip Cookie"
-	@genes = [
-		Darwinning::Gene.new(name: "white sugar", value_range: (0..1), units: "cup"),
-		Darwinning::Gene.new(name: "brown sugar", value_range: (0..1), units: "cup"),
-		Darwinning::Gene.new(name: "flour", value_range: (0..3), units: "cup"),
-		Darwinning::Gene.new(name: "eggs", value_range: (0..3)),
-		Darwinning::Gene.new(name: "baking powder", value_range: (0..2), units: "teaspoon"),
-		Darwinning::Gene.new(name: "salt", value_range: (0..2), units: "teaspoon"),
-		Darwinning::Gene.new(name: "butter", value_range: (0..2), units: "cup"),
-		Darwinning::Gene.new(name: "vanilla extract", value_range: (0..2), units: "teaspoon"),
-		Darwinning::Gene.new(name: "chocolate chips", value_range: (0..20), units: "ounce"),
-		Darwinning::Gene.new(name: "oven temp", value_range: (300..400), units: "degrees F"),
-		Darwinning::Gene.new(name: "cook time", value_range: (5..20), units: "minute")
-	]
+  @name = "Chocolate Chip Cookie"
+  @genes = [
+    Darwinning::Gene.new(name: "white sugar", value_range: (0..1), units: "cup"),
+    Darwinning::Gene.new(name: "brown sugar", value_range: (0..1), units: "cup"),
+    Darwinning::Gene.new(name: "flour", value_range: (0..3), units: "cup"),
+    Darwinning::Gene.new(name: "eggs", value_range: (0..3)),
+    Darwinning::Gene.new(name: "baking powder", value_range: (0..2), units: "teaspoon"),
+    Darwinning::Gene.new(name: "salt", value_range: (0..2), units: "teaspoon"),
+    Darwinning::Gene.new(name: "butter", value_range: (0..2), units: "cup"),
+    Darwinning::Gene.new(name: "vanilla extract", value_range: (0..2), units: "teaspoon"),
+    Darwinning::Gene.new(name: "chocolate chips", value_range: (0..20), units: "ounce"),
+    Darwinning::Gene.new(name: "oven temp", value_range: (300..400), units: "degrees F"),
+    Darwinning::Gene.new(name: "cook time", value_range: (5..20), units: "minute")
+  ]
 end
 
 # Create a population of 10 Cookies (cookie recipes to be more accurate)
@@ -23,8 +23,9 @@ end
 # with a mutation rate of 0.1
 # and taking member fitness as a manually entered value each generation
 p = Darwinning::Population.new(
-	organism: Cookie, population_size: 10,
-	fitness_goal: 5, generations_limit: 100
+  organism: Cookie, population_size: 10,
+  fitness_goal: 5, fitness_objective: :maximize,
+  generations_limit: 100
 )
 
 puts "First Generation of Cookie Population"
