@@ -43,10 +43,10 @@ module Darwinning
     def set_members_fitness!(fitness_values)
       throw "Invaid number of fitness values for population size" if fitness_values.size != members.size
       members.to_enum.each_with_index { |m, i| m.fitness = fitness_values[i] }
+      sort_members
     end
 
     def make_next_generation!
-      temp_members = members
       new_members = []
 
       until new_members.length == members.length
@@ -57,6 +57,7 @@ module Darwinning
       end
 
       @members = apply_non_pairwise_evolutions(new_members)
+      sort_members
       @history << @members
       @generation += 1
     end
@@ -71,7 +72,7 @@ module Darwinning
     end
 
     def best_member
-      @members.sort_by { |m| m.fitness }.first
+      @members.first
     end
 
     def size
@@ -97,6 +98,17 @@ module Darwinning
         best_member.fitness >= fitness_goal
       else
         best_member.fitness <= fitness_goal
+      end
+    end
+
+    def sort_members
+      case @fitness_objective
+      when :nullify
+        @members = @members.sort_by { |m| m.fitness ? m.fitness.abs : m.fitness }
+      when :maximize
+        @members = @members.sort_by { |m| m.fitness }.reverse
+      else
+        @members = @members.sort_by { |m| m.fitness }
       end
     end
 
