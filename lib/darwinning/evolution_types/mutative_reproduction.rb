@@ -9,11 +9,17 @@ module Darwinning
         @mutation_rate = options.fetch(:mutation_rate, 0.1)
       end
 
+      def pairwise?
+        true
+      end
+
       def evolve(*parents)
         raise "Only organisms of the same type can breed" unless parents.collect(&:class).uniq.length == 1
         new_member = random_selection(*parents)
         return mutate(new_member)
       end
+
+      protected
 
       def random_selection(*parents)
         genotypes = {}
