@@ -4,7 +4,7 @@ module Darwinning
     EPSILON = 0.01
 
     attr_reader :members, :generations_limit, :fitness_goal, :fitness_objective,
-                :organism, :population_size, :generation,
+                :organism, :population_size, :generation, :elitism,
                 :evolution_types, :history
 
     DEFAULT_EVOLUTION_TYPES = [
@@ -17,6 +17,7 @@ module Darwinning
       @population_size = options.fetch(:population_size)
       @fitness_objective = options.fetch(:fitness_objective, :nullify) # :maximize, :minimize
       @fitness_goal = options.fetch(:fitness_goal)
+      @elitism = options.fetch(:elitism, 1)
       @generations_limit = options.fetch(:generations_limit, 0)
       @evolution_types = options.fetch(:evolution_types, DEFAULT_EVOLUTION_TYPES)
       @members = []
@@ -49,14 +50,14 @@ module Darwinning
     def make_next_generation!
       new_members = []
 
-      until new_members.length == members.length
+      until new_members.length >= members.length - @elitism
         m1 = weighted_select
         m2 = weighted_select
 
-        new_members += apply_pairwise_evolutions(m1, m2)
+        new_members += [apply_pairwise_evolutions(m1, m2)].flatten
       end
 
-      @members = apply_non_pairwise_evolutions(new_members)
+      @members = @members[0...@elitism] + apply_non_pairwise_evolutions(new_members)
       sort_members
       @history << @members
       @generation += 1
