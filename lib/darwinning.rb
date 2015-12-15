@@ -63,4 +63,15 @@ module Darwinning
     end
     gt
   end
+
+  def ==(o)
+    self.class == o.class && self.genotypes == o.genotypes
+  end
+
+  alias eql? ==
+
+  def hash
+    return self.genotypes.hash
+  end
+
 end
