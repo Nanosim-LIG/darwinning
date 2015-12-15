@@ -48,7 +48,17 @@ module Darwinning
 
       @fitness = nil
     end
-    
+
+    def ==(o)
+      self.class == o.class && self.genotypes == o.genotypes
+    end
+
+    alias eql? ==
+
+    def hash
+      return self.genotypes.hash
+    end
+
     def name
       self.class.name
     end
