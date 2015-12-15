@@ -12,6 +12,8 @@ module Darwinning
       Darwinning::EvolutionTypes::Mutation.new(mutation_rate: 0.10)
     ]
 
+    DEFAULT_SELECTION_TYPE = Darwinning::SelectionTypes::RouletteSampling
+
     def initialize(options = {})
       @organism = options.fetch(:organism)
       @population_size = options.fetch(:population_size)
@@ -20,6 +22,7 @@ module Darwinning
       @elitism = options.fetch(:elitism, 1)
       @generations_limit = options.fetch(:generations_limit, 0)
       @evolution_types = options.fetch(:evolution_types, DEFAULT_EVOLUTION_TYPES)
+      @selection_type = options.fetch(:selection_types, DEFAULT_SELECTION_TYPE)
       @members = []
       @generation = 0 # initial population is generation 0
       @history = []
@@ -27,6 +30,7 @@ module Darwinning
       build_population(@population_size)
       sort_members
       @history << @members
+      extend @selection_type
     end
 
     def build_population(population_size)
@@ -48,16 +52,18 @@ module Darwinning
     end
 
     def make_next_generation!
-      new_members = []
+      new_members = @members[0...@elitism]
 
-      until new_members.length >= members.length - @elitism
-        m1 = weighted_select
-        m2 = weighted_select
+      until new_members.length >= members.length
+        m1, m2 = select( @members, 2 )
 
-        new_members += [apply_pairwise_evolutions(m1, m2)].flatten
+        candidates = [apply_pairwise_evolutions(m1, m2)].flatten
+        candidates.each { |c|
+          new_members.push(c) unless new_members.include?(c)
+        }
       end
 
-      @members = @members[0...@elitism] + apply_non_pairwise_evolutions(new_members)
+      @members = new_members[0...@elitism] + apply_non_pairwise_evolutions(new_members[@elitism..-1])
       sort_members
       @history << @members
       @generation += 1
@@ -122,51 +128,6 @@ module Darwinning
         end
       end
       member
-    end
-
-    def compute_normalized_fitness(membs=members)
-      normalized_fitness = nil
-      return membs.collect { |m| [1.0/membs.length, m] } if membs.first.fitness == membs.last.fitness
-      if @fitness_objective == :nullify
-        normalized_fitness = membs.collect { |m| [ m.fitness.abs <= fitness_goal ? Float::INFINITY : 1.0/(m.fitness.abs - fitness_goal), m] }
-      else
-        if @fitness_objective == :maximize
-          if fitness_goal == Float::INFINITY then
-            #assume goal to be at twice the maximum distance between fitness
-            goal = membs.first.fitness + ( membs.first.fitness - membs.last.fitness )
-          else
-            goal = fitness_goal
-          end
-          normalized_fitness  = membs.collect { |m| [ m.fitness >= goal ? Float::INFINITY : 1.0/(goal - m.fitness), m] }
-        else
-          if fitness_goal == -Float::INFINITY then
-            goal = membs.first.fitness - ( membs.last.fitness - membs.first.fitness )
-          else
-            goal = fitness_goal
-          end
-          normalized_fitness  = membs.collect { |m| [ m.fitness <= goal ? Float::INFINITY : 1.0/(m.fitness - goal), m] }
-        end
-      end
-      if normalized_fitness.first[0] == Float::INFINITY then
-        normalized_fitness.collect! { |m|
-          m[0] == Float::INFINITY ? [1.0, m[1]] : [0.0, m[1]]
-        }
-      end
-      sum = normalized_fitness.collect(&:first).inject(0.0, :+)
-      normalized_fitness.collect { |m| [m[0]/sum, m[1]] }
-    end
-
-    def weighted_select(membs=members)
-      normalized_fitness = compute_normalized_fitness
-      normalized_cumulative_sums = []
-      normalized_cumulative_sums[0] = normalized_fitness[0]
-      (1...normalized_fitness.length).each { |i|
-        normalized_cumulative_sums[i] = [ normalized_cumulative_sums[i-1][0] + normalized_fitness[i][0], normalized_fitness[i][1] ]
-      }
-
-      normalized_cumulative_sums.last[0] = 1.0
-      cut = rand
-      return normalized_cumulative_sums.find { |e| cut < e[0] }[1]
     end
 
     def apply_pairwise_evolutions(m1, m2)
