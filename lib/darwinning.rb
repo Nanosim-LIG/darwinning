@@ -1,4 +1,5 @@
 require_relative 'darwinning/gene'
+require_relative 'darwinning/genotypes'
 require_relative 'darwinning/organism'
 require_relative 'darwinning/evolution_types'
 require_relative 'darwinning/selection_types'
@@ -55,11 +56,12 @@ module Darwinning
   end
 
   def genotypes
-    gt = {}
+    return @genotypes if @genotypes
+    @genotypes = Genotypes::new
     genes.each do |gene|
-      gt[gene] = self.send(gene.name)
+      @genotypes[gene] = self.send(gene.name)
     end
-    gt
+    @genotypes
   end
 
   def ==(o)

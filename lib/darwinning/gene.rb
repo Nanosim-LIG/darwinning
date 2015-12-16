@@ -1,12 +1,13 @@
 module Darwinning
   class Gene
-    attr_reader :name, :value_range, :invalid_values, :units, :value
+    attr_reader :name, :value_range, :invalid_values, :units
 
     def initialize(options = {})
       @name = options.fetch(:name, '')
       @value_range = Array(options.fetch(:value_range, []))
       @invalid_values = Array(options.fetch(:invalid_values, []))
       @units = options.fetch(:units, '')
+      @hash = name.hash ^ value_range.hash ^ invalid_values.hash ^ units.hash
     end
 
     def ==(o)
@@ -17,12 +18,10 @@ module Darwinning
       o.units == units
     end
 
-    def eql?(o)
-      o == self
-    end
+    alias eql? ==
 
     def hash
-      name.hash ^ value_range.hash ^ invalid_values.hash ^ units.hash ^ value.hash
+      return @hash
     end
 
     def express
