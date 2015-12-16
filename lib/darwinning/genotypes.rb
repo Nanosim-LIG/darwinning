@@ -15,5 +15,10 @@ module Darwinning
       return @hash
     end
 
+    def []=(*args)
+      @hash = nil
+      super
+    end
+
   end
 end
