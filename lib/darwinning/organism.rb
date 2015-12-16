@@ -29,7 +29,7 @@ module Darwinning
   class Organism
     include ClassLevelInheritableAttributes
     inheritable_attributes :genes, :name
-    attr_accessor :genotypes, :fitness, :name, :genes
+    attr_accessor :genotypes, :fitness
 
     @genes = []  # Gene instances
     @name = ""
