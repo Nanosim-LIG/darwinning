@@ -11,7 +11,8 @@ module Darwinning
 
   def self.included(base)
     def base.genes
-      gene_ranges.map { |k,v| Gene.new(name: k, value_range: v) }
+      @genes = gene_ranges.map { |k,v| Gene.new(name: k, value_range: v) } unless @genes
+      return @genes
     end
 
     def base.build_population(fitness_goal, population_size = 10, generations_limit = 100, 
