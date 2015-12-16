@@ -25,7 +25,7 @@ end
 p = Darwinning::Population.new(
   organism: Cookie, population_size: 10,
   fitness_goal: 5, fitness_objective: :maximize,
-  generations_limit: 100
+  generations_limit: 100, elitism: 0
 )
 
 puts "First Generation of Cookie Population"
