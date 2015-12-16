@@ -3,7 +3,20 @@ module Darwinning
     module RouletteSampling
       include Sampling
 
-      def select(members, number)
+      def select_different(members, number)
+        raise "Not enough members!" if members.length < number
+        candidates = []
+        membs = members.dup
+        number.times {
+          c = select(membs, 1, false).first
+          candidates.push(c)
+          membs.delete(c)
+        }
+        return candidates
+      end
+
+      def select(members, number, different = true)
+        return select_different(members, number) if different
         normalized_fitness = compute_normalized_fitness(members)
         normalized_cumulative_sums = []
         normalized_cumulative_sums[0] = normalized_fitness[0]
