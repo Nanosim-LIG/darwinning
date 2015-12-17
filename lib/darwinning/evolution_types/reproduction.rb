@@ -33,8 +33,8 @@ module Darwinning
       end
 
       def alternating_swap(m1, m2)
-        genotypes1 = {}
-        genotypes2 = {}
+        genotypes1 = Genotypes::new
+        genotypes2 = Genotypes::new
 
         m1.genes.each_with_index do |gene, i|
           if i % 2 == 0
@@ -50,8 +50,8 @@ module Darwinning
       end
 
       def random_swap(m1, m2)        
-        genotypes1 = {}
-        genotypes2 = {}
+        genotypes1 = Genotypes::new
+        genotypes2 = Genotypes::new
 
         m1.genes.each do |gene|
           g1_parent = [m1,m2].sample

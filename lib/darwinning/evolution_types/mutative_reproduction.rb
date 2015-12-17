@@ -22,7 +22,7 @@ module Darwinning
       protected
 
       def random_selection(*parents)
-        genotypes = {}
+        genotypes = Genotypes::new
         parents.first.genes.each { |gene|
           parent = parents.sample
           genotypes[gene] = parent.genotypes[gene]
@@ -32,8 +32,8 @@ module Darwinning
 
       def mutate(m)
         return m unless rand < mutation_rate
-        genotypes = m.genotypes
-        random_index = rand(m.genotypes.length - 1)
+        genotypes = m.genotypes.clone
+        random_index = rand(genotypes.length - 1)
         gene = m.genes[random_index]
         genotypes[gene] = gene.express
         return new_member_from_genotypes(m.class, genotypes)
