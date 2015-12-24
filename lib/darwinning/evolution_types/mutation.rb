@@ -2,6 +2,7 @@ module Darwinning
   module EvolutionTypes
     class Mutation
       include ReExpress
+      include Mutate
       attr_reader :mutation_rate
 
       def initialize(options = {})
@@ -9,33 +10,19 @@ module Darwinning
       end
 
       def evolve(members)
-        mutate(members)
-      end
-
-      def pairwise?
-        false
-      end
-
-      protected
-
-      def mutate(members)
         members.map do |member|
           if rand < mutation_rate
-            re_express_random_genotype(member)
+            mutate(member)
           else
             member
           end
         end
       end
 
-      # Selects a random genotype from the organism and re-expresses its gene
-      def re_express_random_genotype(member)
-        genotypes = member.genotypes.clone
-        random_index = rand(genotypes.length - 1)
-        gene = member.genes[random_index]
-        genotypes[gene] = gene.express
-        return new_member_from_genotypes(member.class, genotypes)
+      def pairwise?
+        false
       end
+
     end
 
   end

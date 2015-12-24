@@ -3,6 +3,7 @@ module Darwinning
 
     class MutativeReproduction
       include ReExpress
+      include Mutate
       attr_reader :mutation_rate
 
       def initialize(options = {})
@@ -16,7 +17,7 @@ module Darwinning
       def evolve(*parents)
         raise "Only organisms of the same type can breed" unless parents.collect(&:class).uniq.length == 1
         new_member = random_selection(*parents)
-        return mutate(new_member)
+        rand < mutation_rate ? mutate(new_member) : new_member
       end
 
       protected
@@ -28,15 +29,6 @@ module Darwinning
           genotypes[gene] = parent.genotypes[gene]
         }
         return new_member_from_genotypes(parents.first.class, genotypes)
-      end
-
-      def mutate(m)
-        return m unless rand < mutation_rate
-        genotypes = m.genotypes.clone
-        random_index = rand(genotypes.length - 1)
-        gene = m.genes[random_index]
-        genotypes[gene] = gene.express
-        return new_member_from_genotypes(m.class, genotypes)
       end
 
     end
