@@ -20,6 +20,7 @@ module Darwinning
       @fitness_objective = options.fetch(:fitness_objective, :nullify) # :maximize, :minimize
       @fitness_goal = options.fetch(:fitness_goal)
       @elitism = options.fetch(:elitism, 1)
+      @twin_removal = options.fetch(:twin_removal, true)
       @generations_limit = options.fetch(:generations_limit, 0)
       @evolution_types = options.fetch(:evolution_types, DEFAULT_EVOLUTION_TYPES)
       @selection_type = options.fetch(:selection_types, DEFAULT_SELECTION_TYPE)
@@ -31,6 +32,10 @@ module Darwinning
       sort_members
       @history << @members
       extend @selection_type
+    end
+
+    def twin_removal?
+      return !!@twin_removal
     end
 
     def build_population(population_size)
@@ -59,7 +64,7 @@ module Darwinning
 
         candidates = [apply_pairwise_evolutions(m1, m2)].flatten
         candidates.each { |c|
-          new_members.push(c) unless new_members.include?(c)
+          new_members.push(c) unless twin_removal? and new_members.include?(c)
         }
       end
 
