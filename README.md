@@ -57,7 +57,7 @@ Once you have your organism class that includes Darwinning, you can create a pop
 
 ```ruby
 if Triple.is_evolveable?
-  triple_pop = Triple.build_population(0, 10, 100)
+  triple_pop = Triple.build_population(0, population_size: 10, generations_limit: 100)
   triple_pop.evolve! # evolve until fitness goal is or generations limit is met
 
   pp "Best member: #{triple_pop.best_member}"

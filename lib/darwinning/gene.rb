@@ -28,6 +28,10 @@ module Darwinning
       (value_range - invalid_values).sample
     end
 
+    def versions
+      (value_range - invalid_values).length
+    end
+
     def is_valid_value?(value)
       value_range.include?(value) && !invalid_values.include?(value)
     end

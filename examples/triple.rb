@@ -24,7 +24,7 @@ class Triple
 end
 
 if Triple.is_evolveable?
-  triple_pop = Triple.build_population(0, 10, 100, [Darwinning::EvolutionTypes::MutativeReproduction.new(mutation_rate: 0.10) ])
+  triple_pop = Triple.build_population(0, evolution_types: [Darwinning::EvolutionTypes::MutativeReproduction.new(mutation_rate: 0.10) ])
   triple_pop.evolve! # create new generations until fitness goal is met or generation limit is met
 
   puts "Solution"

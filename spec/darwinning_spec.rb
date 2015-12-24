@@ -1,7 +1,7 @@
 require_relative 'spec_helper'
 
 describe Darwinning do
-  let(:triple_pop) { NewTriple.build_population(0, 20, 1000) }
+  let(:triple_pop) { NewTriple.build_population(0, population_size: 20, generations_limit: 1000) }
   let(:triple_pop_member) { triple_pop.members.first }
 
   describe '#build_population' do
@@ -86,7 +86,7 @@ describe Darwinning do
   end
 
   describe 'population evolution' do
-    let(:evolving_triple_pop) { NewTriple.build_population(0, 10, 100) }
+    let(:evolving_triple_pop) { NewTriple.build_population(0, twin_removal: false) }
 
     it 'sets the genotypes of the next generation' do
       evolving_triple_pop.make_next_generation!

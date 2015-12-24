@@ -15,11 +15,10 @@ module Darwinning
       return @genes
     end
 
-    def base.build_population(fitness_goal, population_size = 10, generations_limit = 100, 
-                         evolution_types = Population::DEFAULT_EVOLUTION_TYPES)
-      Population.new(organism: self, population_size: population_size,
-                     generations_limit: generations_limit, fitness_goal: fitness_goal,
-                     evolution_types: evolution_types)
+    def base.build_population(fitness_goal, options = {})
+      default_options = { :population_size => 10, :generations_limit => 100 }
+      opts = default_options.merge(options.merge( { :organism => self, :fitness_goal => fitness_goal } ))
+      Population.new(opts)
     end
 
     def base.is_evolveable?
