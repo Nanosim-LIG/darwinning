@@ -3,7 +3,7 @@ require_relative 'spec_helper'
 describe Darwinning::Population do
   let(:pop_triple) {
     Darwinning::Population.new(
-      organism: Triple, population_size: 10, fitness_goal: 0
+      organism: Triple, population_size: 10, fitness_goal: 0, twin_removal: false
     )
   }
   
