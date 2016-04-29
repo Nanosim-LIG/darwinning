@@ -65,18 +65,5 @@ module Darwinning
       self.class.genes
     end
 
-    # Unsure the combination of genes for this organism
-    # meets the constraints of the search space
-    def valid?(search_space)
-      a = []
-      a.push self.to_a[0]
-      search_space.remove_unfeasible a if not search_space.rules.nil?
-      if not a.empty?
-        return true
-      else
-        return false
-      end
-    end
   end
-
 end

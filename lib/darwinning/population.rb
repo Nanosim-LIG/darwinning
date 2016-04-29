@@ -43,7 +43,7 @@ module Darwinning
       population_size.times do |i|
         begin
           new_member = build_member
-        end until new_member.valid?(@search_space) 
+        end until new_member.genotypes.valid?(@search_space) 
         @members << new_member
       end
     end
@@ -68,7 +68,7 @@ module Darwinning
 
         candidates = [apply_pairwise_evolutions(m1, m2)].flatten
         candidates.each { |c|
-          new_members.push(c) unless twin_removal? and new_members.include?(c) or not c.valid?(@search_space)
+          new_members.push(c) unless twin_removal? and new_members.include?(c) or not c.genotypes.valid?(@search_space)
         }
       end
       
