@@ -19,6 +19,5 @@ module Darwinning
       @hash = nil
       super
     end
-
   end
 end

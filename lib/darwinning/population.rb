@@ -27,7 +27,8 @@ module Darwinning
       @members = []
       @generation = 0 # initial population is generation 0
       @history = []
-
+      @search_space = options.fetch(:search_space)
+      
       build_population(@population_size)
       sort_members
       @history << @members
@@ -40,7 +41,10 @@ module Darwinning
 
     def build_population(population_size)
       population_size.times do |i|
-        @members << build_member
+        begin
+          new_member = build_member
+        end until new_member.valid?(@search_space) 
+        @members << new_member
       end
     end
 
@@ -64,10 +68,10 @@ module Darwinning
 
         candidates = [apply_pairwise_evolutions(m1, m2)].flatten
         candidates.each { |c|
-          new_members.push(c) unless twin_removal? and new_members.include?(c)
+          new_members.push(c) unless twin_removal? and new_members.include?(c) or not c.valid?(@search_space)
         }
       end
-
+      
       @members = new_members[0...@elitism] + apply_non_pairwise_evolutions(new_members[@elitism..-1])
       sort_members
       @history << @members
