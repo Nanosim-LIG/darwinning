@@ -27,7 +27,7 @@ module Darwinning
       @members = []
       @generation = 0 # initial population is generation 0
       @history = []
-      @search_space = options.fetch(:search_space)
+      @search_space = options.fetch(:search_space, nil)
       
       build_population(@population_size)
       sort_members
@@ -41,9 +41,13 @@ module Darwinning
 
     def build_population(population_size)
       population_size.times do |i|
-        begin
+        if @search_space then
+          begin
+            new_member = build_member
+          end until new_member.genotypes.valid?(@search_space)
+        else
           new_member = build_member
-        end until new_member.genotypes.valid?(@search_space) 
+        end
         @members << new_member
       end
     end

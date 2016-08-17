@@ -27,7 +27,7 @@ module Darwinning
         h[g.name.to_sym] = self[g]
       }
       a.push h
-      search_space.remove_unfeasible a if not search_space.rules.nil?
+      search_space.remove_unfeasible a if search_space and not search_space.rules.nil?
       if not a.empty?
         return true
       else
